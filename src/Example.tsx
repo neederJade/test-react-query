@@ -39,8 +39,6 @@ const fetchDataFnc = (lastId?: string, error?: boolean): Promise<Data> => {
         }
       }
       if (lastId) {
-        // if (lastId === "마카") reject(new Error("this is Errrororror"));
-
         const index = dummyData.findIndex((item) => {
           return item.id === lastId;
         });
@@ -70,7 +68,7 @@ export const Example = () => {
   } = useInfiniteQuery({
     queryKey: ["testData"],
     queryFn: async ({ pageParam = "" }) => await fetchDataFnc(pageParam),
-    initialPageParam: "제이드1",
+    initialPageParam: "",
     getNextPageParam: (lastPage) => lastPage.id,
     getPreviousPageParam: () => null,
   });
@@ -78,8 +76,6 @@ export const Example = () => {
   useEffect(() => {
     fetchNextPage();
   }, [page]);
-
-  console.log(data);
 
   return (
     <div
@@ -92,51 +88,12 @@ export const Example = () => {
       <h1>Component Title</h1>
       <p>length:{data?.pages.length}</p>
       {isPending || isFetchingNextPage ? (
-        <p
-          style={{
-            border: "1px solid yellow",
-            fontWeight: 500,
-            padding: "20px",
-            marginBottom: "10px",
-            color: "yellow",
-          }}
-        >
-          Loading
-        </p>
+        <p>Loading</p>
       ) : (
-        <div
-          style={{
-            border: "1px solid pink",
-            padding: "20px",
-            fontWeight: 500,
-            marginBottom: "10px",
-            color: "pink",
-          }}
-        >
-          {data?.pages?.[page - 1]?.id}
-        </div>
+        <p>{data?.pages?.[page - 1]?.id}</p>
       )}
-      {error ? (
-        <p
-          style={{
-            border: "1px solid red",
-            fontWeight: 500,
-            padding: "20px",
-            marginBottom: "10px",
-            color: "red",
-          }}
-        >
-          Error
-        </p>
-      ) : null}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
+      {error ? <p>Error</p> : null}
+      <div>
         <button
           onClick={() => {
             setPage(page - 1);
